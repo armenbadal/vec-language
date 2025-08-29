@@ -25,15 +25,17 @@ IdentifierListOpt
 
 IdentifierList
     : IdentifierList ',' IDENT
+    | IDENT
     ;
 
 StatementList
     : StatementList ';' Statement
+    | Statement
     ;
 
 Statement
     : IDENT '=' Expression
-    | IDENT '[' Expression ']' = Expression
+    | IDENT '[' Expression ']' '=' Expression
     | 'if' Expression 'then' StatementList 'end'
     | 'if' Expression 'then' StatementList 'else' StatementList 'end'
     | 'for' 'each' IDENT 'in' Expression 'do' StatementList 'end'
@@ -70,6 +72,7 @@ ExpressionListOpt
 
 ExpressionList:
     : ExpressionList ',' Expression
+    | Expression
     ;
 
 VectorLiteral
