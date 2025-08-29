@@ -15,7 +15,12 @@ FunctionList
     ;
 
 Function
-    : 'function' IDENT '(' IdentifierList ')' StatementList 'end'
+    : 'function' IDENT '(' IdentifierListOpt ')' StatementList 'end'
+    ;
+
+IdentifierListOpt
+    : IdentifierList
+    | %empty
     ;
 
 IdentifierList
@@ -28,11 +33,12 @@ StatementList
 
 Statement
     : IDENT '=' Expression
+    | IDENT '[' Expression ']' = Expression
     | 'if' Expression 'then' StatementList 'end'
     | 'if' Expression 'then' StatementList 'else' StatementList 'end'
     | 'for' 'each' IDENT 'in' Expression 'do' StatementList 'end'
     | 'return' Expression
-    | IDENT '(' ExpressionList ')'
+    | IDENT '(' ExpressionListOpt ')'
     ;
 
 Expression
@@ -40,6 +46,7 @@ Expression
     | Expression '-' Expression
     | Expression '*' Expression
     | Expression '/' Expression
+    | Expression '%' Expression
     | Expression '++' Expression
     | Expression '**' Expression
     | Expression '=' Expression
@@ -52,11 +59,21 @@ Expression
     | VectorLiteral
     | IDENT '[' Expression ']'
     | IDENT '[' Expression ':' Expression ']'
+    | IDENT '(' ExpressionListOpt ')'
     | IDENT
     ;
 
+ExpressionListOpt
+    : ExpressionList
+    | %empty
+    ;
+
+ExpressionList:
+    : ExpressionList ',' Expression
+    ;
+
 VectorLiteral
-    : '[' ExpressionList ']'
+    : '[' ExpressionListOpt ']'
     ;
 ```
 
@@ -82,4 +99,25 @@ function max(v)
 end
 ```
 
+### Էրատոսթենեսի մաղը
 
+```
+function prime_numbers(n)
+    nums = iota(1, n);
+    for each d in iota(2, n/2) do
+        for each e in nums do
+            if e % d = [0] then
+                e = [0]
+            end
+        end
+    end
+    
+    primes = []
+    for each e in nums do
+        if e <> [0] then
+            primes = primes ++ e
+        end
+    end
+    return primes
+end
+```
