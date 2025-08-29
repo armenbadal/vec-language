@@ -43,5 +43,4 @@ comment     \'.*$
 "|"         { return xVert; }
 ","         { return xComma; }
 ";"         { return xSemicolon; }
-":"         { return xColon; }
 .           { return (int)yytext[0]; }

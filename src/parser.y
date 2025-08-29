@@ -22,7 +22,7 @@
 %token xLeftPar xRightPar
 %token xLeftBr xRightBr
 %token xBar
-%token xComma xSemicolon xColon
+%token xComma xSemicolon
 
 %left xAdd xSub xConc
 %left xMul xDiv xMod xProd
@@ -82,10 +82,9 @@ Expression
     | Expression xGe Expression
     | Expression xLt Expression
     | Expression xLe Expression
+    | Expression xLeftBr Expression xRightBr
     | xBar Expression xBar
     | xLeftPar Expression xRightPar
-    | xIdent xLeftBr Expression xRightBr
-    | xIdent xLeftBr Expression xColon Expression xRightBr
     | xIdent xLeftPar ExpressionListOpt xRightPar
     | Vector
     | xIdent
