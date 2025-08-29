@@ -105,7 +105,7 @@ function max(v)
         if e > m then
             m = e
         end
-    end
+    end;
     return m
 end
 ```
@@ -121,14 +121,14 @@ function prime_numbers(n)
                 e = [0]
             end
         end
-    end
+    end;
     
-    primes = []
+    primes = [];
     for each e in nums do
         if e <> [0] then
             primes = primes ++ e
         end
-    end
+    end;
     return primes
 end
 ```
