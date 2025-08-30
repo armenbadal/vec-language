@@ -1,7 +1,13 @@
 %{
+#include <stdio.h>
+
+extern int yylineno;
+
+extern int yylex();
+static int yyerror(const char *s);
 %}
 
-%error-verbose
+%define parse.error verbose
 
 %token xFunction
 %token xEnd
@@ -21,6 +27,7 @@
 %token xEq xNe xLt xLe xGt xGe
 %token xLeftPar xRightPar
 %token xLeftBr xRightBr
+%token xAssign
 %token xBar
 %token xComma xSemicolon
 
@@ -56,11 +63,12 @@ IdentifierList
 StatementList
     : StatementList xSemicolon Statement
     | Statement
+    | %empty
     ;
 
 Statement
-    : xIdent xEq Expression
-    | xIdent xLeftBr Expression xRightBr xEq Expression
+    : xIdent xAssign Expression
+    | xIdent xLeftBr Expression xRightBr xAssign Expression
     | xIf Expression xThen StatementList xEnd
     | xIf Expression xThen StatementList xElse StatementList xEnd
     | xFor xEach xIdent xIn Expression xDo StatementList xEnd
@@ -82,10 +90,18 @@ Expression
     | Expression xGe Expression
     | Expression xLt Expression
     | Expression xLe Expression
-    | Expression xLeftBr Expression xRightBr
-    | xBar Expression xBar
+    | Postfix
+    ;
+
+Postfix
+    : Primary
+    | Postfix xLeftBr Expression xRightBr
+    | Postfix xLeftPar ExpressionListOpt xRightPar
+    ;
+
+Primary
+    : xBar Expression xBar
     | xLeftPar Expression xRightPar
-    | xIdent xLeftPar ExpressionListOpt xRightPar
     | Vector
     | xIdent
     ;
@@ -95,7 +111,7 @@ ExpressionListOpt
     | %empty
     ;
 
-ExpressionList:
+ExpressionList
     : ExpressionList xComma Expression
     | Expression
     ;
@@ -119,4 +135,10 @@ Element
     | xNumber
     ;
 
+%%
 
+static int yyerror( const char* message )
+{
+  fprintf(stderr, "ERROR: (%d) %s\n", yylineno, message);
+  return 1;
+}

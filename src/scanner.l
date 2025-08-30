@@ -1,5 +1,5 @@
 %{
-
+#include "parser.h"
 %}
 
 %option noyywrap
@@ -30,6 +30,7 @@ comment     \'.*$
 "-"         { return xSub; }
 "*"         { return xMul; }
 "/"         { return xDiv; }
+":="        { return xAssign; }
 "="         { return xEq; }
 "<>"        { return xNe; }
 ">"         { return xGt; }
@@ -40,7 +41,7 @@ comment     \'.*$
 ")"         { return xRightPar; }
 "["         { return xLeftBr; }
 "]"         { return xRightBr; }
-"|"         { return xVert; }
+"|"         { return xBar; }
 ","         { return xComma; }
 ";"         { return xSemicolon; }
 .           { return (int)yytext[0]; }
