@@ -96,12 +96,12 @@ Expression
 Postfix
     : Primary
     | Postfix xLeftBr Expression xRightBr
-    | Postfix xLeftPar ExpressionListOpt xRightPar
     ;
 
 Primary
     : xBar Expression xBar
     | xLeftPar Expression xRightPar
+    | Postfix xLeftPar ExpressionListOpt xRightPar
     | Vector
     | xIdent
     ;

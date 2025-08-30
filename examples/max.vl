@@ -1,0 +1,9 @@
+function max(v)
+    m := v[0];
+    for each e in v do
+        if e > m then
+            m := e
+        end
+    end;
+    return m
+end
