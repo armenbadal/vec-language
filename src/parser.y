@@ -19,6 +19,7 @@ static int yyerror(const char *s);
 %token xIn 
 %token xDo
 %token xReturn
+%token xLet
 %token xIdent
 %token xNumber
 
@@ -27,9 +28,8 @@ static int yyerror(const char *s);
 %token xEq xNe xLt xLe xGt xGe
 %token xLeftPar xRightPar
 %token xLeftBr xRightBr
-%token xAssign
 %token xBar
-%token xComma xSemicolon
+%token xComma xSemicolon xColon
 
 %left xAdd xSub xConc
 %left xMul xDiv xMod xProd
@@ -67,13 +67,17 @@ StatementList
     ;
 
 Statement
-    : xIdent xAssign Expression
-    | xIdent xLeftBr Expression xRightBr xAssign Expression
+    : xLet Place xEq Expression
     | xIf Expression xThen StatementList xEnd
     | xIf Expression xThen StatementList xElse StatementList xEnd
     | xFor xEach xIdent xIn Expression xDo StatementList xEnd
     | xReturn Expression
     | xIdent xLeftPar ExpressionListOpt xRightPar
+    ;
+
+Place
+    : xIdent
+    | xIdent xLeftBr Expression xRightBr
     ;
 
 Expression
@@ -90,20 +94,27 @@ Expression
     | Expression xGe Expression
     | Expression xLt Expression
     | Expression xLe Expression
-    | Postfix
+    | UnaryExpression
     ;
 
-Postfix
-    : Primary
-    | Postfix xLeftBr Expression xRightBr
+UnaryExpression
+    : xSub UnaryExpression
+    | PostfixExpression
     ;
 
-Primary
+PostfixExpression
+    : PrimaryExpression
+    | PostfixExpression xLeftPar ExpressionListOpt xRightPar
+    | PostfixExpression xLeftBr Expression xRightBr
+    | PostfixExpression xLeftBr Expression xColon Expression xRightBr
+    ;
+
+PrimaryExpression
     : xBar Expression xBar
     | xLeftPar Expression xRightPar
-    | Postfix xLeftPar ExpressionListOpt xRightPar
-    | Vector
+    | VectorLiteral
     | xIdent
+    | xNumber
     ;
 
 ExpressionListOpt
@@ -116,23 +127,8 @@ ExpressionList
     | Expression
     ;
 
-Vector
-    : xLeftBr ElementListOpt xRightBr
-    ;
-
-ElementListOpt
-    : ElementList
-    | %empty
-    ;
-
-ElementList
-    : ElementList xComma Element
-    | Element
-    ;
-
-Element
-    : xIdent
-    | xNumber
+VectorLiteral
+    : xLeftBr ExpressionListOpt xRightBr
     ;
 
 %%

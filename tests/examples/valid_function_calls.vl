@@ -1,0 +1,5 @@
+function calculate(a, b, c)
+    print();
+    print(a, b, c);
+    return combine(a, b, c)
+end

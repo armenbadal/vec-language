@@ -1,0 +1,6 @@
+function calculate(a, b, c)
+    let first = -a * b + c;
+    let second = --[1, 2, 3];
+    let third = a ++ b ** c;
+    return [first, second, third]
+end

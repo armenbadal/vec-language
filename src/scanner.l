@@ -23,6 +23,7 @@ comment     \'.*$
 "in"        { return xIn; }
 "do"        { return xDo; }
 "return"    { return xReturn; }
+"let"       { return xLet; }
 {ident}     { return xIdent; }
 "++"        { return xConc; }
 "**"        { return xProd; }
@@ -30,7 +31,7 @@ comment     \'.*$
 "-"         { return xSub; }
 "*"         { return xMul; }
 "/"         { return xDiv; }
-":="        { return xAssign; }
+"%"         { return xMod; }
 "="         { return xEq; }
 "<>"        { return xNe; }
 ">"         { return xGt; }
@@ -44,4 +45,5 @@ comment     \'.*$
 "|"         { return xBar; }
 ","         { return xComma; }
 ";"         { return xSemicolon; }
+":"         { return xColon; }
 .           { return (int)yytext[0]; }

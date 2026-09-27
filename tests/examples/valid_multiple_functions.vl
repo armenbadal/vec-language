@@ -1,0 +1,7 @@
+function identity(value)
+    return value
+end
+
+function calculate()
+    return identity([1, 2, 3])
+end

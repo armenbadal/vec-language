@@ -1,0 +1,11 @@
+function calculate(values)
+    let result = [];
+    for each value in values do
+        if value > 0 then
+            let result = result ++ value
+        else
+            print(value)
+        end
+    end;
+    return result
+end

@@ -1,8 +1,8 @@
 function max(v)
-    m := v[0];
+    let m = v[0];
     for each e in v do
         if e > m then
-            m := e
+            let m = e
         end
     end;
     return m

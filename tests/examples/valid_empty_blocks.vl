@@ -1,0 +1,7 @@
+function calculate(values)
+    if values then
+    end;
+    for each value in values do
+    end;
+    return []
+end

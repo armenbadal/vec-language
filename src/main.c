@@ -4,7 +4,9 @@
 
 int main()
 {
-    yyparse();
+    if (yyparse() != 0)
+        return 1;
+
     printf("Ok\n");
     return 0;
 }

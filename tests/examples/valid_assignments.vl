@@ -1,0 +1,5 @@
+function calculate()
+    let value = [1, 2, 3];
+    let value[1] = 4;
+    return value
+end

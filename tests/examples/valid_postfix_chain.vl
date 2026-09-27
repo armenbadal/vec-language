@@ -1,0 +1,4 @@
+function calculate(v)
+    let result = factory(v)(1)[0][1:2];
+    return result
+end

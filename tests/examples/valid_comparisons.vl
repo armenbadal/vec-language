@@ -1,0 +1,9 @@
+function calculate(a, b)
+    let eq = a = b;
+    let ne = a <> b;
+    let lt = a < b;
+    let le = a <= b;
+    let gt = a > b;
+    let ge = a >= b;
+    return [eq, ne, lt, le, gt, ge]
+end

@@ -13,10 +13,16 @@ FLEX_TARGET(vecscanner src/scanner.l ${CMAKE_CURRENT_BINARY_DIR}/scanner.c)
 
 ADD_FLEX_BISON_DEPENDENCY(vecscanner vecparser)
 
-add_executable(vec
+add_executable(${PROJECT_NAME}
     ${BISON_vecparser_OUTPUTS}
     ${FLEX_vecscanner_OUTPUTS}
     src/main.c
 )
 
-target_include_directories(vec PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+
+include(CTest)
+
+if(BUILD_TESTING)
+    add_subdirectory(tests)
+endif()
