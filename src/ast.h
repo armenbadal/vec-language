@@ -1,5 +1,7 @@
-#ifndef AST_H
-#define AST_H
+#pragma once
+
+#include <stddef.h>
+#include <stdbool.h>
 
 typedef enum _operation {
     OP_ADD,
@@ -14,12 +16,27 @@ typedef enum _operation {
     OP_LT,
     OP_LE,
     OP_GT,
-    OP_GE,
-    OP_ELEM,
-    OP_LEN,
+    OP_GE
 } operation_t;
 
 typedef struct _expression expression_t;
+
+typedef struct _number {
+    double value;
+} number_t;
+
+typedef struct _vector_literal {
+    expression_t **items;
+    size_t count;
+} vector_literal_t;
+
+typedef struct _variable {
+    char *name;
+} variable_t;
+
+typedef struct _unary {
+    expression_t *operand;
+} unary_t;
 
 typedef struct _binary {
     operation_t oper;
@@ -37,57 +54,79 @@ typedef struct _apply {
     size_t arguments_count;
 } apply_t;
 
-typedef struct _value {
-    /* vector_t *vec; */
-} value_t;
+typedef struct _index {
+    expression_t *object;
+    expression_t *position;
+} index_t;
 
-typedef struct _variable {
-    char *name;
-} variable_t;
+typedef struct _slice {
+    expression_t *object;
+    expression_t *begin;
+    expression_t *end;
+} slice_t;
 
 typedef enum _expression_kind {
+    EX_NUMBER,
+    EX_VECTOR_LITERAL,
+    EX_VARIABLE,
+    EX_UNARY,
     EX_BINOP,
     EX_LENGTH,
     EX_APPLY,
-    EX_VALUE,
-    EX_VARIABLE
+    EX_INDEX,
+    EX_SLICE
 } expression_kind_t;
 
 struct _expression {
     expression_kind_t kind;
     union {
-        binary_t *binop;
-        length_t *length;
-        apply_t *apply;
-        value_t *value;
-        variable_t *variable;
+        number_t number;
+        vector_literal_t vector_literal;
+        variable_t variable;
+        unary_t unary;
+        binary_t binop;
+        length_t length;
+        apply_t apply;
+        index_t index;
+        slice_t slice;
     };
 };
 
 
 typedef struct _statement statement_t;
 
-typedef struct _sequence {
+typedef struct _block {
     statement_t **items;
     size_t count;
-} sequence_t;
+} block_t;
 
-typedef struct _assignment {
+typedef enum _assignment_target_kind {
+    TARGET_VARIABLE,
+    TARGET_INDEX
+} assignment_target_kind_t;
+
+typedef struct _assignment_target {
+    assignment_target_kind_t kind;
     char *name;
     expression_t *index;
+} assignment_target_t;
+
+typedef struct _assignment {
+    assignment_target_t target;
     expression_t *value;
 } assignment_t;
 
 typedef struct _branching {
     expression_t *condition;
-    statement_t *decision;
-    statement_t *alternative;
+    block_t decision;
+    bool has_alternative;
+    block_t alternative;
 } branching_t;
 
 typedef struct _iteration {
-    char *parameter; // variable_t
+    char *parameter;
     expression_t *collection;
-    statement_t *body;
+    block_t body;
 } iteration_t;
 
 typedef struct _return {
@@ -95,11 +134,10 @@ typedef struct _return {
 } return_t;
 
 typedef struct _call {
-    apply_t *apply;
+    apply_t apply;
 } call_t;
 
 typedef enum _statement_kind {
-    ST_SEQUENCE,
     ST_ASSIGN,
     ST_BRANCH,
     ST_ITERATE,
@@ -110,12 +148,11 @@ typedef enum _statement_kind {
 struct _statement {
     statement_kind_t kind;
     union {
-        sequence_t *sequence;
-        assignment_t *assign;
-        branching_t *branch;
-        iteration_t *iterate;
-        return_t *result;
-        call_t *call;
+        assignment_t assign;
+        branching_t branch;
+        iteration_t iterate;
+        return_t result;
+        call_t call;
     };
 };
 
@@ -124,12 +161,10 @@ typedef struct _function {
     char *name;
     char **parameters;
     size_t parameters_count;
-    statement_t *body;
+    block_t body;
 } function_t;
 
 typedef struct _program {
     function_t **functions;
     size_t count;
 } program_t;
-
-#endif /* AST_H */
